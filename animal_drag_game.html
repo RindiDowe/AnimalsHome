@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Help the Animals Get Home</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2em;
+      color: #4CAF50;
+    }
+    .game-area {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .drop-zone, .animal {
+      width: 150px;
+      height: 150px;
+      border: 2px dashed #ccc;
+      margin: 10px;
+      border-radius: 10px;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .animal img, .drop-zone img {
+      max-width: 100%;
+      max-height: 100%;
+      pointer-events: none;
+    }
+    .animal {
+      cursor: grab;
+    }
+    #message {
+      margin-top: 30px;
+      font-size: 24px;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Help the Animals Get Home!</h1>
+  <div class="game-area" id="animals">
+    <div class="animal" draggable="true" id="monkey" ondragstart="drag(event)">
+      <img src="https://cdn-icons-png.flaticon.com/128/8418/8418337.png" alt="Monkey" />
+    </div>
+    <div class="animal" draggable="true" id="fish" ondragstart="drag(event)">
+      <img src="https://cdn-icons-png.flaticon.com/128/2970/2970068.png" alt="Fish" />
+    </div>
+    <div class="animal" draggable="true" id="dog" ondragstart="drag(event)">
+      <img src="https://cdn-icons-png.flaticon.com/128/8277/8277432.png" alt="Dog" />
+    </div>
+    <div class="animal" draggable="true" id="horse" ondragstart="drag(event)">
+      <img src="https://cdn-icons-png.flaticon.com/128/9537/9537813.png" alt="Horse" />
+  </div>
+
+  <div class="game-area" id="homes">
+    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-animal="monkey">
+      <img src="https://cdn-icons-png.flaticon.com/128/2220/2220083.png" alt="Tree" />
+    </div>
+    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-animal="fish">
+      <img src="https://cdn-icons-png.flaticon.com/128/4357/4357730.png" alt="Water" />
+    </div>
+    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-animal="dog">
+      <img src="https://cdn-icons-png.flaticon.com/128/8250/8250861.png" alt="Doghouse" />
+    </div>
+    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-animal="horse">
+      <img src="https://cdn-icons-png.flaticon.com/128/186/186125.png" alt="Barn" />
+  </div>
+
+  <div id="message"></div>
+
+  <script>
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const animalId = ev.dataTransfer.getData("text");
+      const dropTarget = ev.currentTarget;
+      const correctAnimal = dropTarget.getAttribute("data-animal");
+
+      if (animalId === correctAnimal) {
+        const animal = document.getElementById(animalId);
+        dropTarget.appendChild(animal);
+        animal.setAttribute("draggable", "false");
+        checkWin();
+      }
+    }
+
+    function checkWin() {
+      const dropZones = document.querySelectorAll('.drop-zone');
+      let complete = true;
+      dropZones.forEach(zone => {
+        if (zone.children.length < 2) complete = false;
+      });
+      if (complete) {
+        document.getElementById("message").textContent = "Great job! All animals are home!";
+      }
+    }
+  </script>
+
+</body>
+</html>
